@@ -11,6 +11,19 @@
     <link rel="manifest" href="%PUBLIC_URL%/manifest.json">
     <link rel="shortcut icon" href="%PUBLIC_URL%/favicon.ico">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <style>
+      .gly-ani {
+        animation: ani 2s infinite linear;
+      }
+      @keyframes ani {
+        0% {
+          transform: rotate(0deg);
+        }
+        100% {
+          transform: rotate(359deg);
+        }
+      }
+    </style>
 
     <!--
       Notice the use of %PUBLIC_URL% in the tags above.
@@ -21,7 +34,7 @@
       work correctly both with client-side routing and a non-root public URL.
       Learn how to configure a non-root public URL by running `npm run build`.
     -->
-    <title>React App</title>
+    <title>Text to Speech Converter - TransKoder's TTS Module</title>
   </head>
   <body>
     <noscript>
