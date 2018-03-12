@@ -12,7 +12,7 @@ class App extends Component {
         this.updateInputValue = this.updateInputValue.bind(this);
     }
 
-    handleDownload(e) {
+    handleConvert(e, urlHandler) {
         if(this.state.loading === true) {
             alert("Please wait, previous operation is in progress ...");
             return;
@@ -27,6 +27,7 @@ class App extends Component {
         this.setState({
            loading: true
         });
+
         let that = this;
         axios.post('/tts_convert',
             {
@@ -39,7 +40,7 @@ class App extends Component {
                 });
                 let data = response.data;
                 if(data.status === 'success') {
-                    window.open(data.url, '_blank');
+                    urlHandler(data);
                 }
             })
             .catch(function (error) {
@@ -52,9 +53,14 @@ class App extends Component {
             });
     }
 
-    /*handleSpeak(e) {
-        let content = this.state.content;
-    }*/
+    openUrl(data) {
+        window.open(data.url, '_blank');
+    }
+
+    playUrl(data) {
+        var audio = new Audio(data.url);
+        audio.play();
+    }
 
     updateInputValue(event) {
         this.setState({
@@ -81,8 +87,9 @@ class App extends Component {
                                     placeholder={"Enter the content to convert to speech"}
                                value={this.state.content}/> <br/>
                         {loading ? <b><i class="glyphicon glyphicon-refresh gly-ani"></i> Processing ...</b> : ""}
-
-                        <button class="btn btn-success" style={{marginLeft: 10}} onClick={(e) => this.handleDownload(e)}>
+                        <button class="btn btn-success" style={{marginLeft: 10}} onClick={(e) => this.handleConvert(e, this.playUrl)}>
+                            <i class="glyphicon glyphicon-volume-up"></i> Speak</button>
+                        <button class="btn btn-success" style={{marginLeft: 10}} onClick={(e) => this.handleConvert(e, this.openUrl)}>
                             <i class="glyphicon glyphicon-cloud-download"></i> Convert & Download</button>
                     </div>
                     <div class="col-md-3">
