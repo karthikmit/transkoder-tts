@@ -7,7 +7,7 @@ class App extends Component {
 
     constructor(props) {
         super(props);
-        this.state = {content: "", loading: false, convertedUrl: ""};
+        this.state = {content: "", loading: false, convertedUrl: "", urlTranscript: ""};
 
         // This binding is necessary to make `this` work in the callback
         this.updateInputValue = this.updateInputValue.bind(this);
@@ -35,13 +35,14 @@ class App extends Component {
                 "text": content
             })
             .then(function (response) {
-
+                let transcript = that.state.content;
                 let data = response.data;
                 if(data.status === 'success') {
                     that.setState({
                         loading: false,
                         content: "",
-                        convertedUrl: data.url
+                        convertedUrl: data.url,
+                        urlTranscript: transcript
                     });
                 }
             })
@@ -84,7 +85,9 @@ class App extends Component {
                         <button class="btn btn-success" style={{marginLeft: 10}} onClick={(e) => this.handleConvert(e, this.openUrl)}>
                             <i class="glyphicon glyphicon-cloud-download"></i> Convert</button>
                         <br/><br/>
+                        <hr/>
                         <div  style={this.state.convertedUrl === '' ? { display: 'none' } : {}}>
+                            <h3>{this.state.urlTranscript}</h3>
                             <AudioPlayerDOM src={this.state.convertedUrl}/>
                         </div>
                     </div>
