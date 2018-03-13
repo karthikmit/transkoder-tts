@@ -1,12 +1,13 @@
 import React, { Component } from 'react';
 import './App.css';
 import axios from 'axios'
+import AudioPlayerDOM from "./audio_player";
 
 class App extends Component {
 
     constructor(props) {
         super(props);
-        this.state = {content: "", loading: false};
+        this.state = {content: "", loading: false, convertedUrl: ""};
 
         // This binding is necessary to make `this` work in the callback
         this.updateInputValue = this.updateInputValue.bind(this);
@@ -34,13 +35,14 @@ class App extends Component {
                 "text": content
             })
             .then(function (response) {
-                that.setState({
-                    loading: false,
-                    content: ""
-                });
+
                 let data = response.data;
                 if(data.status === 'success') {
-                    urlHandler(data);
+                    that.setState({
+                        loading: false,
+                        content: "",
+                        convertedUrl: data.url
+                    });
                 }
             })
             .catch(function (error) {
@@ -48,18 +50,10 @@ class App extends Component {
                 alert("Oops! I am sorry, an Error occurred. Please try later. \n" + error);
                 that.setState({
                     loading: false,
-                    content: ""
+                    content: "",
+                    convertedUrl: ""
                 });
             });
-    }
-
-    openUrl(data) {
-        window.open(data.url, '_blank');
-    }
-
-    playUrl(data) {
-        var audio = new Audio(data.url);
-        audio.play();
     }
 
     updateInputValue(event) {
@@ -87,10 +81,12 @@ class App extends Component {
                                     placeholder={"Enter the content to convert to speech"}
                                value={this.state.content}/> <br/>
                         {loading ? <b><i class="glyphicon glyphicon-refresh gly-ani"></i> Processing ...</b> : ""}
-                        <button class="btn btn-success" style={{marginLeft: 10}} onClick={(e) => this.handleConvert(e, this.playUrl)}>
-                            <i class="glyphicon glyphicon-volume-up"></i> Speak</button>
                         <button class="btn btn-success" style={{marginLeft: 10}} onClick={(e) => this.handleConvert(e, this.openUrl)}>
-                            <i class="glyphicon glyphicon-cloud-download"></i> Convert & Download</button>
+                            <i class="glyphicon glyphicon-cloud-download"></i> Convert</button>
+                        <br/><br/>
+                        <div  style={this.state.convertedUrl === '' ? { display: 'none' } : {}}>
+                            <AudioPlayerDOM src={this.state.convertedUrl}/>
+                        </div>
                     </div>
                     <div class="col-md-3">
 
